@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assinaturas de Email - Trinity Web</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+
+        .signatures-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .signature-item {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+            color: inherit;
+        }
+
+        .signature-item:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .signature-item:hover .signature-title {
+            color: white;
+        }
+
+        .signature-item:hover .signature-description {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .signature-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            transition: color 0.3s ease;
+        }
+
+        .signature-description {
+            color: #666;
+            font-size: 0.95em;
+            transition: color 0.3s ease;
+        }
+
+        .signature-icon {
+            display: inline-block;
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .signature-title {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📧 Assinaturas de Email</h1>
+        <p class="subtitle">Trinity Web - Selecione uma assinatura para visualizar</p>
+        
+        <div class="signatures-list" id="signaturesList">
+            <!-- Os itens serão carregados automaticamente via JavaScript -->
+        </div>
+
+        <div class="footer">
+            <p>Trinity Web © Desde 2019</p>
+        </div>
+    </div>
+
+    <script>
+        // Lista de arquivos HTML na pasta html/
+        // Esta lista será preenchida automaticamente conforme os arquivos disponíveis
+        const htmlFiles = [
+            { 
+                name: 'trindade.html', 
+                title: 'Lucas Trindade', 
+                description: 'Assinatura de email - trindade@thetrinityweb.com.br' 
+            },
+            { 
+                name: 'lavs.html', 
+                title: 'Lavi Lima', 
+                description: 'Assinatura de email - lavs@thetrinityweb.com.br' 
+            }
+        ];
+
+        // Função para formatar o nome do arquivo em um título amigável
+        function formatTitle(filename) {
+            return filename
+                .replace('.html', '')
+                .replace(/-/g, ' ')
+                .replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        // Função para gerar a lista de assinaturas
+        function generateSignaturesList() {
+            const listContainer = document.getElementById('signaturesList');
+            listContainer.innerHTML = '';
+
+            htmlFiles.forEach(file => {
+                const item = document.createElement('a');
+                item.href = `html/${file.name}`;
+                item.className = 'signature-item';
+                item.target = '_blank';
+                
+                const title = file.title || formatTitle(file.name);
+                const description = file.description || `Visualizar assinatura: ${file.name}`;
+
+                item.innerHTML = `
+                    <div class="signature-icon">✉️</div>
+                    <div style="display: inline-block;">
+                        <div class="signature-title">${title}</div>
+                        <div class="signature-description">${description}</div>
+                    </div>
+                `;
+
+                listContainer.appendChild(item);
+            });
+
+            // Se não houver arquivos, mostrar mensagem
+            if (htmlFiles.length === 0) {
+                listContainer.innerHTML = '<p style="text-align: center; color: #999;">Nenhuma assinatura encontrada.</p>';
+            }
+        }
+
+        // Função para tentar descobrir arquivos HTML automaticamente (funciona apenas com servidor HTTP)
+        async function tryAutoDiscover() {
+            // Esta função tenta carregar uma lista de arquivos
+            // Funciona apenas se você estiver usando um servidor HTTP local
+            try {
+                // Aqui você poderia fazer uma requisição para um endpoint que lista arquivos
+                // Por enquanto, mantemos a lista estática
+                generateSignaturesList();
+            } catch (error) {
+                // Se falhar, usa a lista estática
+                generateSignaturesList();
+            }
+        }
+
+        // Inicializar a lista quando a página carregar
+        document.addEventListener('DOMContentLoaded', () => {
+            generateSignaturesList();
+        });
+    </script>
+</body>
+</html>
